@@ -1,0 +1,78 @@
+version: "3.9"
+
+services:
+  prowlarr:
+    container_name: prowlarr
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    image: linuxserver/prowlarr
+    ports:
+      - "9696:9696"
+    volumes:
+      - $PROWLARR_CONFIG:/config
+
+  radarr:
+    container_name: radarr
+    depends_on:
+      - plex
+      - prowlarr
+      - sabnzbd
+      - transmission
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    image: linuxserver/radarr
+    ports:
+      - "7878:7878"
+    volumes:
+      - $RADARR_CONFIG:/config
+      - $RADARR_DATA:/arr
+
+  sabnzbd:
+    container_name: sabnzbd
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    image: linuxserver/sabnzbd
+    ports:
+      - "8080:8080"
+    volumes:
+      - $SABNZBD_CONFIG:/config
+      - $SABNZBD_DATA:/arr/usenet
+
+  sonarr:
+    container_name: sonarr
+    depends_on:
+      - plex
+      - prowlarr
+      - sabnzbd
+      - transmission
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    image: linuxserver/sonarr
+    ports:
+      - "8989:8989"
+    volumes:
+      - $SONARR_CONFIG:/config
+      - $SONARR_DATA:/arr
+
+  transmission:
+    container_name: transmission
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    image: linuxserver/transmission
+    ports:
+      - "9091:9091"
+      - "51413:51413"
+      - "51413:51413/udp"
+    volumes:
+      - $TRANSMISSION_CONFIG:/config
+      - $TRANSMISSION_DATA:/arr/torrents

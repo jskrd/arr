@@ -16,7 +16,6 @@ services:
   radarr:
     container_name: radarr
     depends_on:
-      - plex
       - prowlarr
       - sabnzbd
       - transmission
@@ -47,7 +46,6 @@ services:
   sonarr:
     container_name: sonarr
     depends_on:
-      - plex
       - prowlarr
       - sabnzbd
       - transmission
